@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+run.log
+HIT.txt
+*.tmp
