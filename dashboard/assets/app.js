@@ -84,6 +84,8 @@ function render() {
             if (g && g.global_counter !== undefined) {
                 const el = $('nodes');
                 if (el) el.textContent = g.global_counter.toLocaleString();
+                const lc = $('latest-counter');
+                if (lc) lc.textContent = g.global_counter.toLocaleString();
             }
         }).catch(() => {});
 
