@@ -1,11 +1,9 @@
 /**
  * Bitcoin Collision Hunter — Dashboard Renderer
- * Polls state.json every 5 seconds
  */
-
 const SEARCH_SPACE = Math.pow(2, 160);
 const TARGET_ADDRS = 5e7;
-const CHANCE_DENOM = SEARCH_SPACE / TARGET_ADDRS;  // ~2^133
+const CHANCE_DENOM = SEARCH_SPACE / TARGET_ADDRS;
 
 function fmt(n) {
     if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
@@ -14,45 +12,47 @@ function fmt(n) {
     if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
     return n.toLocaleString();
 }
-
 function sci(n) {
     if (n === 0) return '0';
     let e = Math.floor(Math.log10(n));
     let m = n / Math.pow(10, e);
     return m.toFixed(3) + ' × 10^' + e;
 }
+function $(id) { return document.getElementById(id); }
 
 function fetchState() {
-    return fetch('data/state.json?' + Date.now())
-        .then(r => r.json())
-        .catch(() => null);
+    return fetch('data/state.json?' + Date.now()).then(r => r.json()).catch(() => null);
+}
+
+function renderHitRecord(h) {
+    const btc = ((h.balance || 0) / 1e8).toFixed(8);
+    return '<div style="border:1px solid #2a2a2a;padding:0.8rem;margin-bottom:0.5rem;background:#0a0a0e">' +
+        '<div style="font-size:0.5rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:0.4rem">🚨 HIT</div>' +
+        '<table>' +
+        '<tr><td style="width:90px;font-size:0.5rem;color:var(--text-dim)">COUNTER</td><td style="font-size:0.65rem;color:var(--text)">' + (h.counter||'') + '</td></tr>' +
+        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">PRIV</td><td style="font-size:0.55rem;color:var(--btc);word-break:break-all">' + (h.priv||'') + '</td></tr>' +
+        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">PUB</td><td style="font-size:0.55rem;color:var(--text);word-break:break-all">' + (h.pub||'') + '</td></tr>' +
+        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">ADDR</td><td style="font-size:0.55rem;color:var(--text);word-break:break-all">' + (h.addr||'') + '</td></tr>' +
+        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">BALANCE</td><td style="font-size:0.65rem;color:var(--green)">' + btc + ' BTC</td></tr>' +
+        '</table></div>';
 }
 
 function render() {
     fetchState().then(state => {
         if (!state) return;
+        const counter = state.counter || 0, hits = state.hits || 0;
+        const progress = counter / CHANCE_DENOM, pct = Math.min(progress * 100, 100);
 
-        const counter = state.counter || 0;
-        const hits = state.hits || 0;
-        const progress = counter / CHANCE_DENOM;
-        const pct = Math.min(progress * 100, 100);
+        $('counter').textContent = fmt(counter);
+        $('counter-sci').textContent = sci(counter) + ' / ' + sci(CHANCE_DENOM);
+        $('pct').textContent = pct < 1e-10 ? '< 0.0000000001%' : pct.toFixed(10) + '%';
+        $('progress-fill').style.width = Math.min(pct, 100) + '%';
 
-        // 主计数器
-        document.getElementById('counter').textContent = fmt(counter);
-        document.getElementById('counter-sci').textContent = sci(counter) + ' / ' + sci(CHANCE_DENOM);
-
-        // 进度
-        let pctStr = pct < 1e-10 ? '< 0.0000000001%' : pct.toFixed(10) + '%';
-        document.getElementById('pct').textContent = pctStr;
-        document.getElementById('progress-fill').style.width = Math.min(pct, 100) + '%';
-
-        // Hits
-        const hEl = document.getElementById('hits');
+        const hEl = $('hits');
         hEl.textContent = hits;
         hEl.className = 'value' + (hits === 0 ? ' hit-zero' : '');
 
-        // ETA
-        const etaEl = document.getElementById('eta');
+        const etaEl = $('eta');
         if (counter > 0 && state.started_at) {
             const elapsedMs = Date.now() - new Date(state.started_at).getTime();
             const etaSec = (1 / progress) * elapsedMs / 1000;
@@ -60,43 +60,47 @@ function render() {
             if (etaYears > 1e30) etaEl.textContent = '∞';
             else if (etaYears > 1e9) etaEl.textContent = '~' + sci(etaYears) + ' yrs';
             else etaEl.textContent = '~' + etaYears.toFixed(0) + ' yrs';
-        } else {
-            etaEl.textContent = '∞';
-        }
+        } else etaEl.textContent = '∞';
 
-        // 类比
+        // Analogy
         const analogies = [
             '≈ 连续中 ' + sci(1e7) + ' 次双色球头奖',
             '≈ 在撒哈拉沙漠找到一粒做过标记的沙子',
             '≈ 从宇宙诞生至今每秒一次，还需 ' + sci(1e20) + ' 倍时间',
             '≈ 全地球80亿人每秒一次，连抽 ' + sci(1e12) + ' 年',
         ];
-        const aEl = document.getElementById('analogy');
+        const aEl = $('analogy');
         if (aEl) aEl.textContent = analogies[Math.floor(Math.random() * analogies.length)];
 
-        // 上线时间
+        // Runtime
         if (state.started_at) {
-            const start = new Date(state.started_at);
-            const now = new Date();
+            const start = new Date(state.started_at), now = new Date();
             const diff = now - start;
-            document.getElementById('uptime').textContent =
-                Math.floor(diff / 86400000) + 'd ' +
-                Math.floor((diff % 86400000) / 3600000) + 'h ' +
-                Math.floor((diff % 3600000) / 60000) + 'm';
-            document.getElementById('started-at').textContent = state.started_at;
+            $('uptime').textContent = Math.floor(diff / 86400000) + 'd ' + Math.floor((diff % 86400000) / 3600000) + 'h ' + Math.floor((diff % 3600000) / 60000) + 'm';
+            $('started-at').textContent = state.started_at;
+        }
+        $('today').textContent = fmt(36000);
+
+        // Latest check
+        if (state.last_hit) {
+            $('recent-counter').textContent = (state.last_hit.counter || 0).toLocaleString();
+            $('recent-addr').textContent = state.last_hit.addr || '--';
+            $('recent-balance').textContent = '0 BTC';
         }
 
-        // 今日检查
-        document.getElementById('today').textContent = fmt(36000);
-
-        // 最新记录
-        if (state.last_hit) {
-            document.getElementById('recent-counter').textContent =
-                (state.last_hit.counter || 0).toLocaleString();
-            document.getElementById('recent-addr').textContent =
-                state.last_hit.addr || '--';
-            document.getElementById('recent-balance').textContent =
-                '0 BTC';
+        // Hit records
+        const hitLog = state.hits_log || [];
+        const ph = $('hit-placeholder');
+        const hl = $('hit-list');
+        if (hitLog.length === 0) {
+            if (ph) ph.style.display = 'block';
+            if (hl) hl.style.display = 'none';
+        } else {
+            if (ph) ph.style.display = 'none';
+            if (hl) {
+                hl.style.display = 'block';
+                hl.innerHTML = hitLog.map(renderHitRecord).join('');
+            }
         }
     });
 }

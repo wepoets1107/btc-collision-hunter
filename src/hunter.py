@@ -53,6 +53,12 @@ def log_hit(counter: int, priv_hex: str, addr: str, balance: int):
         f.write(f"=== HIT! ===\ncounter={counter}\npriv={priv_hex}\naddr={addr}\nbalance={balance}\n\n")
 
 
+def privkey_to_pubkey(priv_bytes: bytes) -> str:
+    """私钥 → 压缩公钥 hex"""
+    pk = PrivateKey(priv_bytes)
+    return pk.public_key.format().hex()
+
+
 def main():
     print("🦐 Bitcoin Collision Hunter 启动")
     print("  速率限制: {} addr/s".format(BATCH_SIZE * MAX_BATCHES_PER_SEC))
@@ -66,6 +72,7 @@ def main():
         print(f"  从 counter={counter} 恢复")
 
     hits = 0
+    hits_log = []  # 记录所有命中详情
     batch_times = []
 
     run_deadline = time.time() + MAX_RUN_HOURS * 3600
@@ -95,8 +102,19 @@ def main():
         for addr, balance in results.items():
             if balance > 0:
                 c, p_hex = privs[addr]
-                print(f"  🚨 HIT! counter={c} addr={addr} balance={balance}")
+                priv_bytes = derive_privkey(c)
+                pub_hex = privkey_to_pubkey(priv_bytes)
+                hit_record = {
+                    "counter": c,
+                    "priv": p_hex,
+                    "pub": pub_hex,
+                    "addr": addr,
+                    "balance": balance,
+                    "discovered_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                }
+                print(f"  🚨 HIT! counter={c} priv={p_hex[:16]}... addr={addr} balance={balance}")
                 log_hit(c, p_hex, addr, balance)
+                hits_log.append(hit_record)
                 hits += 1
 
             # 日志只记录最近几条（不在文件里保留太多）
@@ -124,7 +142,7 @@ def main():
             "counter": prev_counter,
             "priv": privs[batch[0]][1][:16] + "...",
             "addr": batch[0][:16] + "...",
-        })
+        }, hits_log=hits_log if hits_log else None)
 
         # 5. 速率控制
         elapsed = time.time() - batch_start

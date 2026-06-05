@@ -15,7 +15,7 @@ def load():
         return data.get("counter", 0)
 
 
-def save(counter, hits, started_at, extra_hit_info=None):
+def save(counter, hits, started_at, extra_hit_info=None, hits_log=None):
     """写状态文件（原子写入）"""
     data = {
         "counter": counter,
@@ -27,6 +27,8 @@ def save(counter, hits, started_at, extra_hit_info=None):
     }
     if extra_hit_info:
         data["last_hit"] = extra_hit_info
+    if hits_log:
+        data["hits_log"] = hits_log
 
     tmp = STATE_FILE + ".tmp"
     with open(tmp, "w") as f:
