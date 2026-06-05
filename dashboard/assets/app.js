@@ -90,11 +90,14 @@ function render() {
         const hitLog = state.hits_log || [];
         const ph = $('hit-placeholder');
         const hl = $('hit-list');
+        const hf = $('hit-framework');
         if (hitLog.length === 0) {
-            if (ph) ph.style.display = 'block';
+            if (hf) hf.style.display = 'block';
             if (hl) hl.style.display = 'none';
+            if (ph) ph.textContent = '等待第一个也是唯一一个奇迹';
         } else {
-            if (ph) ph.style.display = 'none';
+            if (hf) hf.style.display = 'none';
+            if (ph) ph.textContent = '已命中 ' + hitLog.length + ' 次';
             if (hl) {
                 hl.style.display = 'block';
                 hl.innerHTML = hitLog.map(renderHitRecord).join('');

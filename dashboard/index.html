@@ -96,8 +96,18 @@
     <div class="recent" id="hit-section">
         <div class="title-cn">命中记录</div>
         <div class="title-en">HIT RECORDS</div>
-        <div id="hit-placeholder" style="font-size:0.65rem;color:var(--text-dim);letter-spacing:1px;padding:0.5rem 0.3rem">
-            暂时没有。也许永远不会有。
+        <div id="hit-framework">
+            <div style="border:1px solid #1a1a1a;padding:0.8rem;background:#0a0a0e">
+                <div style="font-size:0.5rem;color:var(--green);opacity:0.4;letter-spacing:3px;text-transform:uppercase;margin-bottom:0.6rem">🚨 HIT</div>
+                <table>
+                    <tr><td style="width:70px;font-size:0.5rem;color:var(--text-dim);letter-spacing:2px;opacity:0.4">私钥<br><span style="font-size:0.45rem;text-transform:uppercase;color:var(--text-dim)">PRIV</span></td><td style="font-size:0.5rem;color:var(--btc);opacity:0.3;word-break:break-all;font-style:italic">--</td></tr>
+                    <tr><td style="font-size:0.5rem;color:var(--text-dim);letter-spacing:2px;opacity:0.4">公钥<br><span style="font-size:0.45rem;text-transform:uppercase;color:var(--text-dim)">PUB</span></td><td style="font-size:0.5rem;color:var(--text);opacity:0.3;word-break:break-all;font-style:italic">--</td></tr>
+                    <tr><td style="font-size:0.5rem;color:var(--text-dim);letter-spacing:2px;opacity:0.4">余额<br><span style="font-size:0.45rem;text-transform:uppercase;color:var(--text-dim)">BALANCE</span></td><td style="font-size:0.5rem;color:var(--green);opacity:0.3;font-style:italic">-- BTC</td></tr>
+                </table>
+            </div>
+            <div id="hit-placeholder" style="text-align:center;font-size:0.6rem;color:var(--text-dim);opacity:0.3;letter-spacing:2px;margin-top:0.8rem;padding:0.3rem">
+                等待第一个也是唯一一个奇迹
+            </div>
         </div>
         <div id="hit-list" style="display:none"></div>
     </div>

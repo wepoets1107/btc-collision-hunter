@@ -290,3 +290,23 @@ body {
     .counter-big { font-size: 2.4rem; }
     .header h1 { font-size: 0.9rem; }
 }
+
+/* Hit Framework */
+.hit-frame { border:1px solid #1a1a1a;padding:0.8rem;background:#0a0a0e; }
+.hit-frame .badge {
+    font-size:0.5rem;color:var(--green);opacity:0.4;
+    letter-spacing:3px;text-transform:uppercase;margin-bottom:0.6rem;
+}
+.hit-frame td {
+    font-size:0.5rem;color:var(--text-dim);letter-spacing:2px;opacity:0.4;
+    padding:0.2rem 0.3rem;
+    border:none;
+}
+.hit-frame td.val { font-size:0.5rem;font-style:italic;opacity:0.3; }
+.hit-frame td.val-btc { color:var(--btc); }
+.hit-frame td.val-green { color:var(--green); }
+.hit-frame td.val-text { color:var(--text); }
+.hit-wait {
+    text-align:center;font-size:0.6rem;color:var(--text-dim);
+    opacity:0.3;letter-spacing:2px;margin-top:0.8rem;padding:0.3rem;
+}
