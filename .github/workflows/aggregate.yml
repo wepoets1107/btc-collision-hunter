@@ -5,6 +5,9 @@ on:
     - cron: '*/10 * * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   aggregate:
     runs-on: ubuntu-latest
@@ -13,18 +16,11 @@ jobs:
       - name: Aggregate from Issue comments
         env:
           GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/aggregate.py
+      - name: Commit and push global.json
         run: |
-          gh issue view 1 --comments --json body --jq '.[] | .body' > comments.txt
-          TOTAL=$(python3 -c "
-import re, sys
-total = 0
-for line in sys.stdin:
-    m = re.search(r'已检查[\s\`](\\d+)[\`]', line)
-    if m: total += int(m.group(1))
-print(total)
-" < comments.txt)
-          echo "global_counter=$TOTAL" >> $GITHUB_ENV
-      - name: Update dashboard state
-        run: |
-          mkdir -p dashboard/data
-          echo '{"global_counter":${{ env.global_counter }},"updated_at":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}' > dashboard/data/global.json
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add dashboard/data/global.json
+          git diff --staged --quiet || git commit -m "📊 auto aggregate"
+          git push
