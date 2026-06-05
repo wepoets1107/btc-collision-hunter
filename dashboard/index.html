@@ -3,94 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>比特币碰撞猎手 — BTC Collision Hunter</title>
+<title>Bitcoin Collision Hunter</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <div class="container">
-    <h1>🦐 Bitcoin Collision Hunter</h1>
-    <p style="text-align:center;color:#666;font-size:0.9rem;margin-bottom:1.5rem">
-        密码学行为艺术 — 我们有可能撞开中本聪的钱包吗？
-    </p>
 
-    <div class="hero">
-        <div class="counter-big" id="counter">0</div>
-        <div class="progress-label" id="counter-sci">0 / 2¹⁶⁰</div>
-        <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="progress-fill"></div>
-        </div>
-        <div class="progress-label" id="pct">0%</div>
+    <div class="header">
+        <h1>₿itcoin <span>Collision</span> Hunter</h1>
+        <div class="sub">密码学行为艺术 · 全球撞库实验</div>
     </div>
 
+    <!-- 主计数器 -->
+    <div class="hero">
+        <div class="hero-label">TOTAL ADDRESSES CHECKED</div>
+        <div class="counter-big" id="counter">0</div>
+        <div class="counter-detail" id="counter-sci">0 / 2¹⁶⁰</div>
+        <div class="progress-section">
+            <div class="label">PROGRESS TOWARD 2¹³³</div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+            <div class="counter-detail" id="pct">0%</div>
+        </div>
+    </div>
+
+    <!-- 三栏核心数据 -->
     <div class="stat-grid">
         <div class="stat-card">
-            <div class="label">命中</div>
-            <div class="value zero" id="hits">0</div>
+            <div class="label">HITS</div>
+            <div class="value hit-zero" id="hits">0</div>
         </div>
         <div class="stat-card">
-            <div class="label">全球节点</div>
-            <div class="value" id="nodes">1</div>
+            <div class="label">GLOBAL NODES</div>
+            <div class="value highlight" id="nodes">1</div>
         </div>
         <div class="stat-card">
-            <div class="label">预计撞到时间</div>
+            <div class="label">EST. TIME TO HIT</div>
             <div class="value infinity" id="eta">∞</div>
         </div>
     </div>
 
+    <!-- 密码学原理 -->
     <div class="science">
-        <h2>🔬 数学</h2>
-        <p>
-            比特币地址空间 <strong>2¹⁶⁰</strong>，全球有资产地址约 <strong>5×10⁷</strong> 个。
-            期望撞到一个需要 <strong>2¹³³</strong> 次尝试。
-        </p>
-        <p>
-            本节点每天 <strong>1 小时</strong>，每秒 <strong>10</strong> 个确定性私钥→地址→查余额。
-            私钥由计数器经 <strong>HMAC-SHA256</strong> 派生，永不重复、不落盘。
-            全世界任何人都可以跑自己的节点，通过 GitHub Issue 汇报贡献。
-        </p>
+        <h2>🔬 数学原理</h2>
+        <p>比特币地址 = <span class="hl-w">Base58Check(</span><span class="hl">RIPEMD160</span><span class="hl-w">(</span><span class="hl">SHA256</span><span class="hl-w">(secp256k1公钥)))</span></p>
+        <p>私钥 → 公钥是椭圆曲线离散对数问题，<span class="hl-w">不可逆</span>。</p>
+        <p>搜索空间 <span class="hl">2¹⁶⁰</span> · 有资产目标 ≈ <span class="hl">5×10⁷</span> · 期望撞到一个 ≈ <span class="hl">2¹³³</span> 次</p>
+        <p>本节点：<span class="hl-w">10</span> addr/s · 每天 <span class="hl-w">1</span> 小时 · 私钥由 <span class="hl">HMAC-SHA256(counter)</span> 派生</p>
         <div class="analogy" id="analogy">
             ≈ 连续中 10²⁰ 次双色球头奖
         </div>
     </div>
 
+    <!-- 运行信息 -->
     <div class="stat-grid">
         <div class="stat-card">
-            <div class="label">运行时长</div>
-            <div class="value" id="uptime">--</div>
+            <div class="label">RUNNING SINCE</div>
+            <div class="value" style="font-size:0.75rem" id="started-at">--</div>
         </div>
         <div class="stat-card">
-            <div class="label">上线时间</div>
-            <div class="value" style="font-size:0.85rem" id="started-at">--</div>
+            <div class="label">UPTIME</div>
+            <div class="value" style="font-size:1rem" id="uptime">--</div>
         </div>
         <div class="stat-card">
-            <div class="label">今日已检查</div>
-            <div class="value" id="today">0</div>
+            <div class="label">TODAY'S CHECK</div>
+            <div class="value highlight" id="today">0</div>
         </div>
     </div>
 
+    <!-- 最新检查 -->
     <div class="recent">
-        <h2>🔍 最新检查</h2>
+        <h2>🔍 最新一条记录</h2>
         <table>
-            <tr>
-                <td style="width:80px">私钥编号</td>
-                <td class="addr" id="recent-counter">--</td>
-            </tr>
-            <tr>
-                <td>地址</td>
-                <td class="addr" id="recent-addr">--</td>
-            </tr>
-            <tr>
-                <td>余额</td>
-                <td class="zero" id="recent-balance">0 SAT</td>
-            </tr>
+            <tr><td>COUNTER</td><td class="addr" id="recent-counter">--</td></tr>
+            <tr><td>ADDRESS</td><td class="addr" id="recent-addr">--</td></tr>
+            <tr><td>BALANCE</td><td class="zero" id="recent-balance">0 BTC</td></tr>
         </table>
     </div>
 
-    <div class="tech">
-        <p>加入这场行为艺术 → <a href="https://github.com/wepoets1107/btc-collision-hunter" target="_blank">wepoets1107/btc-collision-hunter</a></p>
-        <p>本页面不存储任何私钥。所有私钥由计数器实时派生，用完即弃。</p>
-        <p>源码: Python + coincurve + blockchain.info API · 冰火岛 🦐 2026</p>
+    <!-- 参与 -->
+    <div class="cta">
+        ☛ 加入这场行为艺术：<a href="https://github.com/wepoets1107/btc-collision-hunter" target="_blank">github.com/wepoets1107/btc-collision-hunter</a>
     </div>
+
+    <div class="footer">
+        <div>不存储私钥 · 由计数器实时派生 · 用完即弃</div>
+        <div>Python + coincurve + blockchain.info API</div>
+        <div style="margin-top:0.5rem">🦐 2026 · 冰火岛</div>
+    </div>
+
 </div>
 <script src="assets/app.js"></script>
 </body>
