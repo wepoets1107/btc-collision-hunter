@@ -27,7 +27,7 @@ total = 0
 last_updated = ""
 for c in comments:
     body = c.get("body", "")
-    m = re.search(r"已检查[\s\`](\d+)[\`]", body)
+    m = re.search(r"已检查[\s\`]+(\d+)", body)
     if m:
         total += int(m.group(1))
         last_updated = c.get("created_at", "")
