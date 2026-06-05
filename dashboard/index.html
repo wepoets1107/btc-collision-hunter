@@ -8,7 +8,10 @@
 </head>
 <body>
 <div class="container">
-    <h1>⚡ Bitcoin Collision Hunter</h1>
+    <h1>🦐 Bitcoin Collision Hunter</h1>
+    <p style="text-align:center;color:#666;font-size:0.9rem;margin-bottom:1.5rem">
+        密码学行为艺术 — 我们有可能撞开中本聪的钱包吗？
+    </p>
 
     <div class="hero">
         <div class="counter-big" id="counter">0</div>
@@ -25,8 +28,8 @@
             <div class="value zero" id="hits">0</div>
         </div>
         <div class="stat-card">
-            <div class="label">速度</div>
-            <div class="value" id="speed">--</div>
+            <div class="label">全球节点</div>
+            <div class="value" id="nodes">1</div>
         </div>
         <div class="stat-card">
             <div class="label">预计撞到时间</div>
@@ -35,14 +38,15 @@
     </div>
 
     <div class="science">
-        <h2>🔬 密码学原理</h2>
+        <h2>🔬 数学</h2>
         <p>
-            比特币地址 = <strong>Base58Check(RIPEMD160(SHA256(secp256k1公钥)))</strong>。
-            私钥→公钥是椭圆曲线离散对数问题，不可逆。
+            比特币地址空间 <strong>2¹⁶⁰</strong>，全球有资产地址约 <strong>5×10⁷</strong> 个。
+            期望撞到一个需要 <strong>2¹³³</strong> 次尝试。
         </p>
         <p>
-            本猎手每秒生成 <strong>100</strong> 个确定性私钥→地址→查余额。
-            私钥由单调计数器经 HMAC-SHA256 派生，永不重复、不落盘。
+            本节点每天 <strong>1 小时</strong>，每秒 <strong>10</strong> 个确定性私钥→地址→查余额。
+            私钥由计数器经 <strong>HMAC-SHA256</strong> 派生，永不重复、不落盘。
+            全世界任何人都可以跑自己的节点，通过 GitHub Issue 汇报贡献。
         </p>
         <div class="analogy" id="analogy">
             ≈ 连续中 10²⁰ 次双色球头奖
@@ -55,20 +59,20 @@
             <div class="value" id="uptime">--</div>
         </div>
         <div class="stat-card">
-            <div class="label">启动时间</div>
+            <div class="label">上线时间</div>
             <div class="value" style="font-size:0.85rem" id="started-at">--</div>
         </div>
         <div class="stat-card">
-            <div class="label">全球有资产地址</div>
-            <div class="value">≈ 50,000,000</div>
+            <div class="label">今日已检查</div>
+            <div class="value" id="today">0</div>
         </div>
     </div>
 
     <div class="recent">
-        <h2>最新检查</h2>
+        <h2>🔍 最新检查</h2>
         <table>
             <tr>
-                <td>Counter</td>
+                <td style="width:80px">私钥编号</td>
                 <td class="addr" id="recent-counter">--</td>
             </tr>
             <tr>
@@ -76,20 +80,16 @@
                 <td class="addr" id="recent-addr">--</td>
             </tr>
             <tr>
-                <td>余额 (SAT)</td>
-                <td class="zero" id="recent-balance">0</td>
+                <td>余额</td>
+                <td class="zero" id="recent-balance">0 SAT</td>
             </tr>
         </table>
     </div>
 
     <div class="tech">
-        <p>开源地址：<a href="https://github.com/wepoets1107/btc-collision-hunter" target="_blank">wepoets1107/btc-collision-hunter</a></p>
+        <p>加入这场行为艺术 → <a href="https://github.com/wepoets1107/btc-collision-hunter" target="_blank">wepoets1107/btc-collision-hunter</a></p>
         <p>本页面不存储任何私钥。所有私钥由计数器实时派生，用完即弃。</p>
-        <p>源码: Python + coincurve + blockchain.info API</p>
-    </div>
-
-    <div class="footer">
-        🦐 冰火岛 · 行为艺术 · 2026
+        <p>源码: Python + coincurve + blockchain.info API · 冰火岛 🦐 2026</p>
     </div>
 </div>
 <script src="assets/app.js"></script>
