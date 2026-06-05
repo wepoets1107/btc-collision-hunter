@@ -27,13 +27,11 @@ function fetchState() {
 function renderHitRecord(h) {
     const btc = ((h.balance || 0) / 1e8).toFixed(8);
     return '<div style="border:1px solid #2a2a2a;padding:0.8rem;margin-bottom:0.5rem;background:#0a0a0e">' +
-        '<div style="font-size:0.5rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:0.4rem">🚨 HIT</div>' +
+        '<div style="font-size:0.5rem;color:var(--green);letter-spacing:3px;text-transform:uppercase;margin-bottom:0.6rem">🚨 HIT</div>' +
         '<table>' +
-        '<tr><td style="width:90px;font-size:0.5rem;color:var(--text-dim)">COUNTER</td><td style="font-size:0.65rem;color:var(--text)">' + (h.counter||'') + '</td></tr>' +
-        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">PRIV</td><td style="font-size:0.55rem;color:var(--btc);word-break:break-all">' + (h.priv||'') + '</td></tr>' +
-        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">PUB</td><td style="font-size:0.55rem;color:var(--text);word-break:break-all">' + (h.pub||'') + '</td></tr>' +
-        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">ADDR</td><td style="font-size:0.55rem;color:var(--text);word-break:break-all">' + (h.addr||'') + '</td></tr>' +
-        '<tr><td style="font-size:0.5rem;color:var(--text-dim)">BALANCE</td><td style="font-size:0.65rem;color:var(--green)">' + btc + ' BTC</td></tr>' +
+        '<tr><td style="width:70px;font-size:0.5rem;color:var(--text-dim);letter-spacing:2px">私钥<br><span style="font-size:0.45rem;text-transform:uppercase;color:var(--text-dim)">PRIV</span></td><td style="font-size:0.55rem;color:var(--btc);word-break:break-all">' + (h.priv||'--') + '</td></tr>' +
+        '<tr><td style="font-size:0.5rem;color:var(--text-dim);letter-spacing:2px">公钥<br><span style="font-size:0.45rem;text-transform:uppercase;color:var(--text-dim)">PUB</span></td><td style="font-size:0.55rem;color:var(--text);word-break:break-all">' + (h.pub||'--') + '</td></tr>' +
+        '<tr><td style="font-size:0.5rem;color:var(--text-dim);letter-spacing:2px">余额<br><span style="font-size:0.45rem;text-transform:uppercase;color:var(--text-dim)">BALANCE</span></td><td style="font-size:0.65rem;color:var(--green)">' + btc + ' BTC</td></tr>' +
         '</table></div>';
 }
 
