@@ -22,5 +22,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add dashboard/data/global.json
-          git diff --staged --quiet || git commit -m "📊 auto aggregate"
+          git diff --staged --quiet && echo "No changes" && exit 0
+          git commit -m "📊 auto aggregate"
+          git pull --rebase --autostash || true
           git push
