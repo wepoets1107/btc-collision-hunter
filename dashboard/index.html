@@ -3,94 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bitcoin Collision Hunter</title>
+<title>Bitcoin Collision Hunter — 行为艺术</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <div class="container">
 
+    <!-- 头 -->
     <div class="header">
-        <h1>₿itcoin <span>Collision</span> Hunter</h1>
-        <div class="sub">密码学行为艺术 · 全球撞库实验</div>
+        <div class="symbol">₿</div>
+        <h1>Collision Hunter</h1>
+        <div class="sub">— 密码学行为艺术 —</div>
+        <div class="divider"></div>
+    </div>
+
+    <!-- 宣言 -->
+    <div class="manifesto">
+        <p>
+            私钥不可逆。<br>
+            搜索空间 <span class="highlight">2¹⁶⁰</span>。<br>
+            每 <span class="highlight">10</span> 秒，一个随机私钥诞生又消失。<br>
+            它们全部指向空地址。<br>
+            永远如此。
+        </p>
+        <p class="question">
+            我们有可能撞开中本聪的钱包吗？
+        </p>
     </div>
 
     <!-- 主计数器 -->
-    <div class="hero">
-        <div class="hero-label">TOTAL ADDRESSES CHECKED</div>
-        <div class="counter-big" id="counter">0</div>
-        <div class="counter-detail" id="counter-sci">0 / 2¹⁶⁰</div>
-        <div class="progress-section">
-            <div class="label">PROGRESS TOWARD 2¹³³</div>
-            <div class="progress-bar-wrap">
-                <div class="progress-bar-fill" id="progress-fill"></div>
-            </div>
-            <div class="counter-detail" id="pct">0%</div>
+    <div class="counter-block">
+        <div class="label">已检查地址</div>
+        <div class="number" id="counter">0</div>
+        <div class="detail" id="counter-sci">0 / 2¹⁶⁰</div>
+        <div class="progress-line">
+            <div class="fill" id="progress-fill"></div>
         </div>
+        <div class="detail" id="pct" style="margin-top:0.4rem">0%</div>
     </div>
 
-    <!-- 三栏核心数据 -->
-    <div class="stat-grid">
-        <div class="stat-card">
-            <div class="label">HITS</div>
-            <div class="value hit-zero" id="hits">0</div>
+    <!-- 三栏 -->
+    <div class="data-grid">
+        <div class="data-cell">
+            <div class="label">命中</div>
+            <div class="value zero" id="hits">0</div>
         </div>
-        <div class="stat-card">
-            <div class="label">GLOBAL NODES</div>
-            <div class="value highlight" id="nodes">1</div>
+        <div class="data-cell">
+            <div class="label">参与节点</div>
+            <div class="value" id="nodes">1</div>
         </div>
-        <div class="stat-card">
-            <div class="label">EST. TIME TO HIT</div>
+        <div class="data-cell">
+            <div class="label">预计撞到</div>
             <div class="value infinity" id="eta">∞</div>
         </div>
     </div>
 
-    <!-- 密码学原理 -->
-    <div class="science">
-        <h2>🔬 数学原理</h2>
-        <p>比特币地址 = <span class="hl-w">Base58Check(</span><span class="hl">RIPEMD160</span><span class="hl-w">(</span><span class="hl">SHA256</span><span class="hl-w">(secp256k1公钥)))</span></p>
-        <p>私钥 → 公钥是椭圆曲线离散对数问题，<span class="hl-w">不可逆</span>。</p>
-        <p>搜索空间 <span class="hl">2¹⁶⁰</span> · 有资产目标 ≈ <span class="hl">5×10⁷</span> · 期望撞到一个 ≈ <span class="hl">2¹³³</span> 次</p>
-        <p>本节点：<span class="hl-w">10</span> addr/s · 每天 <span class="hl-w">1</span> 小时 · 私钥由 <span class="hl">HMAC-SHA256(counter)</span> 派生</p>
-        <div class="analogy" id="analogy">
-            ≈ 连续中 10²⁰ 次双色球头奖
+    <!-- 诗 -->
+    <div class="poem-block">
+        <div class="line">
+            <span class="o">私钥</span> 是门<br>
+            <span class="w">公钥</span> 是锁<br>
+            <span class="o">椭圆曲线</span> 是墙<br>
+            <span class="g">我们</span> 是反复敲门的人
         </div>
+        <div class="ref">— 碰撞猎手 · 冰火岛</div>
     </div>
 
     <!-- 运行信息 -->
-    <div class="stat-grid">
-        <div class="stat-card">
-            <div class="label">RUNNING SINCE</div>
-            <div class="value" style="font-size:0.75rem" id="started-at">--</div>
+    <div class="data-grid">
+        <div class="data-cell">
+            <div class="label">始于</div>
+            <div class="value" style="font-size:0.6rem" id="started-at">--</div>
         </div>
-        <div class="stat-card">
-            <div class="label">UPTIME</div>
-            <div class="value" style="font-size:1rem" id="uptime">--</div>
+        <div class="data-cell">
+            <div class="label">已运行</div>
+            <div class="value" style="font-size:0.7rem" id="uptime">--</div>
         </div>
-        <div class="stat-card">
-            <div class="label">TODAY'S CHECK</div>
-            <div class="value highlight" id="today">0</div>
+        <div class="data-cell">
+            <div class="label">今日检查</div>
+            <div class="value" id="today">0</div>
         </div>
     </div>
 
-    <!-- 最新检查 -->
-    <div class="recent">
-        <h2>🔍 最新一条记录</h2>
+    <!-- 最新 -->
+    <div class="tiny-block">
+        <div class="title">最新一条记录</div>
         <table>
-            <tr><td>COUNTER</td><td class="addr" id="recent-counter">--</td></tr>
-            <tr><td>ADDRESS</td><td class="addr" id="recent-addr">--</td></tr>
-            <tr><td>BALANCE</td><td class="zero" id="recent-balance">0 BTC</td></tr>
+            <tr><td>编号</td><td class="addr" id="recent-counter">--</td></tr>
+            <tr><td>地址</td><td class="addr" id="recent-addr">--</td></tr>
+            <tr><td>余额</td><td class="zero" id="recent-balance">0 BTC</td></tr>
         </table>
     </div>
 
     <!-- 参与 -->
     <div class="cta">
-        ☛ 加入这场行为艺术：<a href="https://github.com/wepoets1107/btc-collision-hunter" target="_blank">github.com/wepoets1107/btc-collision-hunter</a>
+        <a href="https://github.com/wepoets1107/btc-collision-hunter" target="_blank">☛ 加入这场无意义</a>
     </div>
 
     <div class="footer">
-        <div>不存储私钥 · 由计数器实时派生 · 用完即弃</div>
-        <div>Python + coincurve + blockchain.info API</div>
-        <div style="margin-top:0.5rem">🦐 2026 · 冰火岛</div>
+        <div>私钥由 HMAC-SHA256(counter) 派生 · 用完即弃</div>
+        <div>Python + coincurve + blockchain.info</div>
+        <div style="margin-top:0.5rem;color:#222">🦐 冰火岛 · 2026</div>
     </div>
 
 </div>
