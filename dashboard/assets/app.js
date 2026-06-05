@@ -79,6 +79,14 @@ function render() {
         }
         $('today').textContent = fmt(36000);
 
+        // Global counter from aggregate
+        fetch('data/global.json?' + Date.now()).then(r => r.json()).then(g => {
+            if (g && g.global_counter !== undefined) {
+                const el = $('nodes');
+                if (el) el.textContent = g.global_counter.toLocaleString();
+            }
+        }).catch(() => {});
+
         // Latest check
         if (state.last_hit) {
             $('recent-counter').textContent = (state.last_hit.counter || 0).toLocaleString();
@@ -108,3 +116,20 @@ function render() {
 
 render();
 setInterval(render, 5000);
+
+// Global counter from aggregate
+function fetchGlobal() {
+    return fetch('data/global.json?' + Date.now()).then(r => r.json()).catch(() => null);
+}
+
+// Patch render to include global
+const origRender = render;
+render = function() {
+    origRender();
+    fetchGlobal().then(g => {
+        if (g && g.global_counter !== undefined) {
+            const el = document.getElementById('nodes');
+            if (el) el.textContent = fmt(g.global_counter);
+        }
+    });
+};

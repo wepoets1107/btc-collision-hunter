@@ -19,11 +19,12 @@ jobs:
 import re, sys
 total = 0
 for line in sys.stdin:
-    m = re.search(r'已检查\`(\d+)\`', line)
+    m = re.search(r'已检查[\s\`](\\d+)[\`]', line)
     if m: total += int(m.group(1))
 print(total)
 " < comments.txt)
           echo "global_counter=$TOTAL" >> $GITHUB_ENV
       - name: Update dashboard state
         run: |
-          echo "{\"global_counter\": ${{ env.global_counter }}, \"updated_at\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > dashboard/data/global.json
+          mkdir -p dashboard/data
+          echo '{"global_counter":${{ env.global_counter }},"updated_at":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}' > dashboard/data/global.json
